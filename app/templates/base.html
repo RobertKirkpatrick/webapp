@@ -11,7 +11,14 @@
 <body>
         <div>RK3505 APPSEC SpellCheck:
             <a href="{{ url_for('index') }}">Home</a>
-            <a href="{{ url_for('login') }}">Login</a>
+            {% if current_user.is_anonymous %}
+                <!-- is_anonymous property is one of the attributes that Flask-Login
+                adds to user objects through the UserMixin class. The current_user.is_anonymous
+                expression is going to be True only when the user is not logged in-->
+                <a href="{{ url_for('login') }}">Login</a>
+            {% else %}
+                <a href="{{ url_for('logout') }}">Logout</a>
+            {% endif %}
         </div>
         <hr>
         {% block content %}{% endblock %}

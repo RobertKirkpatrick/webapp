@@ -19,6 +19,14 @@
             <span style="color: yellowgreen;">[{{ error }}]</span>
             {% endfor %}
         </p>
+            <p>
+            {{ form.twofact.label }}<br>
+            {{ form.twofact(size=11) }}
+            {% for error in form.twofact.errors %}
+            <span style="color: yellowgreen;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
         <p>{{ form.submit() }}</p>
     </form>
+    <p>New User? <a href="{{ url_for('register') }}">Click to Register!</a></p>
 {% endblock %}

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+      {% if title %}
+      <title>{{ title }} - APPSEC</title>
+      {% else %}
+      <title>Welcome to APPSEC SpellCheck</title>
+      {% endif %}
+</head>
+<body>
+        <div>RK3505 APPSEC SpellCheck: <a href="/index">Home</a></div>
+        <hr>
+        {% block content %}{% endblock %}
+
+</body>
+</html>

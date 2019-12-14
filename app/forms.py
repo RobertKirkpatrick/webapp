@@ -4,18 +4,18 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from app.models import User
 
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
+    username = StringField('Username', validators=[DataRequired()], id="uname")
+    password = PasswordField('Password', validators=[DataRequired()], id="pword")
     # MFA optional to be added
-    twofact = StringField('TwoFactor', id='2fact')
+    twofact = StringField('TwoFactor', id='2fa')
     submit = SubmitField('Login')
 
 class RegistrationForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    password2 = PasswordField(
-        'Repeat Password', validators=[DataRequired(), EqualTo('password')])
-    twofact = StringField('TwoFactor', id='2fact')
+    username = StringField('Username', validators=[DataRequired()], id="uname")
+    password = PasswordField('Password', validators=[DataRequired()], id="pword")
+    # password2 = PasswordField(
+    #    'Repeat Password', validators=[DataRequired(), EqualTo('password')])
+    twofact = StringField('TwoFactor', id='2fa')
     submit = SubmitField('Register')
 
     def validate_username(self, username):

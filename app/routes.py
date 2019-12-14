@@ -1,7 +1,7 @@
 from flask import render_template, flash, url_for, redirect, request
 from app import app
 from app.forms import LoginForm
-from flask_login import current_user, login_user
+from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User
 from flask_login import login_required
 from app import db
@@ -11,7 +11,7 @@ from werkzeug.urls import url_parse
 
 @app.route('/')
 @app.route('/index')
-#  @login_required   # this url becomes protected with user requiring login to see it
+@login_required   # this url becomes protected with user requiring login to see it
 def index():
     # render_template invokes jinja2 template engine
     return render_template('index.html', title='Home')
@@ -25,7 +25,7 @@ def login():
         return redirect(url_for('index'))
     form = LoginForm()
     if form.validate_on_submit():
-        #method validate_on_submit does the processing, GET will return false, skipping if statement
+        # method validate_on_submit does the processing, GET will return false, skipping if statement
         # POST submit is going to gather data, run validators, and return True, ready to be processed
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
@@ -43,7 +43,7 @@ def login():
 @app.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for('login'))
 
 
 @app.route('/register', methods=['GET', 'POST'])

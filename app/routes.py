@@ -33,6 +33,7 @@ def login():
             return redirect(url_for('login'))
         login_user(user)  # , remember=form.remember_me.data)
         next_page = request.args.get('next')
+        success_message = 'Success'
         if not next_page or url_parse(next_page).netloc != '':
             # if there is not a next in the url or if the url is to a different domain, then redirect to index
             next_page = url_for('index')

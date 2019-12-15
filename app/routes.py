@@ -51,6 +51,7 @@ def logout():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    registration_message = ''
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = RegistrationForm()
@@ -59,9 +60,10 @@ def register():
         userl.set_password(form.password.data)
         db.session.add(userl)
         db.session.commit()
+        registration_message = 'success'
         flash('Congratulations, you are now a registered user!')
-        return redirect(url_for('login'))
-    return render_template('register.html', title='Register', form=form)
+        #return redirect(url_for('login'))
+    return render_template('register.html', title='Register', success =registration_message, form=form)
 
 
 @app.route('/spell_check', methods=['GET', 'POST'])

@@ -1,12 +1,13 @@
 from flask import render_template, flash, url_for, redirect, request
 from app import app
-from app.forms import LoginForm
+from app.forms import LoginForm, spellcheckForm
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User
+from app.models import User, SpellCheckC
 from flask_login import login_required
 from app import db
 from app.forms import RegistrationForm
 from werkzeug.urls import url_parse
+import subprocess, os, sys
 
 
 @app.route('/')
@@ -54,10 +55,34 @@ def register():
         return redirect(url_for('index'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data, twofact=form.twofact.data)
-        user.set_password(form.password.data)
-        db.session.add(user)
+        userl = User(username=form.username.data, twofact=form.twofact.data)
+        userl.set_password(form.password.data)
+        db.session.add(userl)
         db.session.commit()
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
+
+
+@app.route('/spell_check', methods=['GET', 'POST'])
+@login_required   # this url becomes protected with user requiring login to see it
+def spell_check():
+    form = spellcheckForm()
+    if form.validate_on_submit():
+        user_words = form.spellcheck.data
+        ifile = open('check_words.txt', 'w')
+        ifile.write(user_words)
+        ifile.close()
+        # PIPE indicates that a pipe to the standard stream should be opened. Most useful with Popen.communicate().
+        pwd = os.getcwd()
+        words = subprocess.Popen(['./a.out', 'input.txt', 'wordlist.txt'], cwd=pwd, stdout=subprocess.PIPE)
+        stdoutdata, stderrdata = words.communicate()
+        found_mispelled = stdoutdata.decode("utf-8").rstrip()
+        new_query = SpellCheckC(uname=current_user.id, query_word=user_words, query_result=found_mispelled)
+        db.session.add(new_query)
+        db.session.commit()
+        flash('Success')
+        return render_template('spell_check.html', title='Spell Check',
+                               user_words=user_words, misspelled=found_mispelled, form=form)
+    result = None
+    return render_template('spell_check.html', title='Spell Check', form=form)

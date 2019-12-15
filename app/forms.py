@@ -22,3 +22,8 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(username=username.data).first()
         if user is not None:
             raise ValidationError('Please use a different username.')
+
+
+class spellcheckForm(FlaskForm):
+    spellcheck = StringField('Word', validators=[DataRequired()], id="inputtext")
+    submit = SubmitField('spellcheck')

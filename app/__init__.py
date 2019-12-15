@@ -10,6 +10,9 @@ db = SQLAlchemy(app)
 login = LoginManager(app)
 # inform flask login which view function handles logins, which is the name used in a url_for() call to get the URL.
 login.login_view = 'login'
+db.init_app(app)
 migrate = Migrate(app, db)
 
 from app import routes, models
+db.create_all()
+db.session.commit()

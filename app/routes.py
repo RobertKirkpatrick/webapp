@@ -7,7 +7,8 @@ from flask_login import login_required
 from app import db
 from app.forms import RegistrationForm
 from werkzeug.urls import url_parse
-import subprocess, os, sys
+import subprocess, os, sys, os.path
+from flask_wtf.csrf import CSRFProtect, CSRFError
 
 
 @app.route('/')
@@ -32,9 +33,14 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
-            return redirect(url_for('login'))
+            login_message = 'Incorrect'
+            return render_template('login.html', title='Login', result=login_message, form=form)
+            #return redirect(url_for('login'))
+        if user.twofact != form.twofact.data:
+            login_message = 'Incorrect'
+            return render_template('login.html', title='Login', result=login_message, form=form)
         login_user(user)  # , remember=form.remember_me.data)
-        next_page = request.args.get('next')
+        # next_page = request.args.get('next')
         login_message = 'Success'
         #if not next_page or url_parse(next_page).netloc != '':
             # if there is not a next in the url or if the url is to a different domain, then redirect to index
@@ -76,15 +82,15 @@ def spell_check():
     form = spellcheckForm()
     if form.validate_on_submit():
         user_words = form.spellcheck.data
-        ifile = open('check_words.txt', 'w')
+        ifile = open('check_words.txt', "w")
         ifile.write(user_words)
         ifile.close()
         # PIPE indicates that a pipe to the standard stream should be opened. Most useful with Popen.communicate().
         pwd = os.getcwd()
-        words = subprocess.Popen(['./a.out', 'input.txt', 'wordlist.txt'], cwd=pwd, stdout=subprocess.PIPE)
+        words = subprocess.Popen(['./a.out', 'check_words.txt', 'wordlist.txt'], cwd=pwd, stdout=subprocess.PIPE)
         stdoutdata, stderrdata = words.communicate()
         found_mispelled = stdoutdata.decode("utf-8").rstrip()
-        new_query = SpellCheckC(uname=current_user.id, query_word=user_words, query_result=found_mispelled)
+        new_query = SpellCheckC(uname = current_user.id, query_word = user_words, query_result=found_mispelled)
         db.session.add(new_query)
         db.session.commit()
         flash('Success')

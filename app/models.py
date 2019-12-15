@@ -10,7 +10,7 @@ class User(UserMixin, db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True) #id field is a primary key
     username = db.Column(db.String(64), index=True, unique=True)
-    twofact = db.Column(db.String(10), index=True)
+    twofact = db.Column(db.String(11), index=True)
     password_hash = db.Column(db.String(128))
 
     def set_password(self, password):
@@ -27,12 +27,13 @@ class User(UserMixin, db.Model):
 
 class SpellCheckC(UserMixin, db.Model):
     id = db.Column(db.Integer(), unique=True, nullable=False, primary_key=True)
-    uname = db.Column(db.String(64), unique=False, nullable=False)
+    uname = db.Column(db.Integer,db.ForeignKey('user.id'), nullable=False)
     query_word = db.Column(db.String(512), unique=False, nullable=False)
     query_result = db.Column(db.String(512), unique=False, nullable=False)
 
     def __repr__(self):
-        return f"User({self.id!r},{self.uname!r},{self.query_word!r},{self.query_result!r})"
+        return '<SpellCheckC {}>'.format(self.query_result)
+        # return f"User({self.id!r},{self.uname!r},{self.query_word!r},{self.query_result!r})"
 
 
 # flask-login extension expects that the application will

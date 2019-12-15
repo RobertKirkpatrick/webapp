@@ -65,10 +65,9 @@ def register():
         registration_message = 'success'
         flash('Congratulations, you are now a registered user!')
         #return redirect(url_for('login'))
-        return render_template('register.html', success = registration_message, form=form)
     else:
         registration_message = 'failure'
-        return render_template('register.html', success=registration_message, form=form)
+    return render_template('register.html', success=registration_message, form=form)
 
 
 @app.route('/spell_check', methods=['GET', 'POST'])

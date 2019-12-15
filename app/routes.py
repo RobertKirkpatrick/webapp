@@ -22,7 +22,7 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     # identify if user is already authenticated, and if so redirect to index
-    login_message = 'Failure'
+    login_message = ''
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = LoginForm()
@@ -36,11 +36,11 @@ def login():
         login_user(user)  # , remember=form.remember_me.data)
         next_page = request.args.get('next')
         login_message = 'Success'
-        if not next_page or url_parse(next_page).netloc != '':
+        #if not next_page or url_parse(next_page).netloc != '':
             # if there is not a next in the url or if the url is to a different domain, then redirect to index
-            next_page = url_for('index')
-        return redirect(next_page)  # otherwise redirect to the next page
-    return render_template('login.html', title='Signin', form=form, result=login_message)
+        #    next_page = url_for('index')
+        #return redirect(next_page)  # otherwise redirect to the next page
+    return render_template('login.html', title='Login', result=login_message, form=form)
 
 
 @app.route('/logout')

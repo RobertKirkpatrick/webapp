@@ -10,6 +10,12 @@ from werkzeug.urls import url_parse
 import subprocess, os, sys, os.path
 from flask_wtf.csrf import CSRFProtect, CSRFError
 
+#create admin account
+if User.query.filter_by(username='admin').first() == None:
+    admin = User(username ='admin', twofact='17577485533') # also set to admin once added
+    admin.set_password('password')
+    db.session.add(admin)
+    db.session.commit()
 
 @app.route('/')
 @app.route('/index')

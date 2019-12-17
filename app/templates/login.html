@@ -31,5 +31,5 @@
     <p>New User? <a href="{{ url_for('register') }}">Click to Register!</a></p>
     <h3>Login Status is: {{ login_message }}!</h3>
     <h3>Hi, {{ current_user.username }}!</h3>
-    <p id="result">{{ login_message }}</p>
+    <p id="result">{{ success }}</p>
 {% endblock %}

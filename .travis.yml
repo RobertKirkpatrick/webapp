@@ -1,0 +1,19 @@
+language: python
+python: 
+  - "3.6"
+  - "3.7"
+before_install:
+  - python --version
+  - pip install -U pip  # gets latest version of pip
+  - pip install -U pytest
+  - pip install codecov
+
+install:
+  - pip install -r requirements.txt    
+#  - pip install ".[test]"
+    
+script: pytest
+#  - tox will add after getting pytest working
+
+after_success:
+  - codecov  

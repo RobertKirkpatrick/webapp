@@ -70,8 +70,6 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         userl = User(username=form.username.data, twofact=form.twofact.data)
-        #
-        #
         userl.set_password(form.password.data)
         db.session.add(userl)
         db.session.commit()

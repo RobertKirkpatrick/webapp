@@ -9,7 +9,7 @@ class User(UserMixin, db.Model):
     # implementations that are appropriate for most user model classes.
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True) #id field is a primary key
-    username = db.Column(db.String(64), index=True, unique=True)
+    username = db.Column(db.String(32), index=True, unique=True)
     twofact = db.Column(db.String(11), index=True)
     password_hash = db.Column(db.String(128))
 
